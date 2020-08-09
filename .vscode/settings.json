@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "fsm.h": "c",
+        "esp_err.h": "c",
+        "math.h": "c",
+        "cmd_app.h": "c",
+        "cmd_trajectory.h": "c",
+        "vector_lib_comp.h": "c",
+        "motor_controller.h": "c",
+        "*.ipp": "c",
+        "__locale": "c"
+    }
+}

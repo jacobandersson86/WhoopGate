@@ -1,0 +1,6 @@
+menu "ROL Configuration"
+
+    config CMD_APP
+        bool "Use custom cli commands"
+        default y
+endmenu
