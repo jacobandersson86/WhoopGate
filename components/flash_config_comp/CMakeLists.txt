@@ -2,7 +2,7 @@
 
 set(COMPONENT_SRCS flash_config.c cmd_flash_config.c)
 set(COMPONENT_ADD_INCLUDEDIRS ".")
-set(COMPONENT_REQUIRES libfixmath_comp nvs_flash freertos console fatfs)
+set(COMPONENT_REQUIRES nvs_flash freertos console fatfs)
 
 
-register_component()
+#register_component()

@@ -1,6 +1,12 @@
-menu "ROL Configuration"
+menu "Whoop Gate Configuration"
 
-    config CMD_APP
-        bool "Use custom cli commands"
-        default y
+    menu "Wifi connect"
+        config WIFI_SSID
+            string "SSID"
+            default "my ssid"
+        config WIFI_PASSWORD
+            string "PASSWORD"
+            default "my password"
+    endmenu
+    
 endmenu

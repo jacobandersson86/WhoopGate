@@ -5,4 +5,4 @@ set(COMPONENT_ADD_INCLUDEDIRS ".")
 
 set(COMPONENT_REQUIRES fatfs nvs_flash console flash_config_comp)
 
-register_component()
+#register_component()
