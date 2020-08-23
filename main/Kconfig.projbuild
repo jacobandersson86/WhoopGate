@@ -1,4 +1,9 @@
 menu "Whoop Gate Configuration"
+    menu "General"
+        config WHOOP_ID
+            string "ID"
+            default "gate1"
+    endmenu
 
     menu "Wifi connect"
         config WIFI_SSID
@@ -8,5 +13,10 @@ menu "Whoop Gate Configuration"
             string "PASSWORD"
             default "my password"
     endmenu
-    
+
+    menu "MQTT client"
+        config MQTT_URI
+            string "URI"
+            default "my uri"
+    endmenu
 endmenu

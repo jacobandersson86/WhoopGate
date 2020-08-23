@@ -9,6 +9,10 @@
         "motor_controller.h": "c",
         "*.ipp": "c",
         "__locale": "c",
-        "*.inc": "cpp"
+        "*.inc": "cpp",
+        "array": "c",
+        "string_view": "c",
+        "string": "c",
+        "vector": "c"
     }
 }
