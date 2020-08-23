@@ -8,6 +8,7 @@
         "vector_lib_comp.h": "c",
         "motor_controller.h": "c",
         "*.ipp": "c",
-        "__locale": "c"
+        "__locale": "c",
+        "*.inc": "cpp"
     }
 }

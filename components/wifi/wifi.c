@@ -16,7 +16,9 @@
 #define PASSWORD CONFIG_WIFI_PASSWORD
 #define TAG "wifi"
 
-
+// [EXTN]
+extern TaskHandle_t eventLogicTaskHandle;
+extern const uint32_t WIFI_CONNECTED;
 
 // [PFDE]
 static esp_err_t event_handler(void * ctx, system_event_t *ev);
@@ -27,7 +29,6 @@ static esp_err_t event_handler(void * ctx, system_event_t *event)
     switch(event->event_id)
     {
         case SYSTEM_EVENT_STA_START:
-            //wifiScan();
             esp_wifi_connect();
             ESP_LOGI(TAG, "Connecting");
             break;
@@ -37,6 +38,7 @@ static esp_err_t event_handler(void * ctx, system_event_t *event)
             break;
         case SYSTEM_EVENT_STA_GOT_IP:
             ESP_LOGI(TAG, "Got IP");
+            xTaskNotify(eventLogicTaskHandle, WIFI_CONNECTED, eSetValueWithOverwrite);
             break;
         case SYSTEM_EVENT_STA_DISCONNECTED:
             ESP_LOGI(TAG, "Disconnected");
@@ -64,7 +66,7 @@ void wifiScan()
         .channel = 0,
         .show_hidden = true
     };
-    esp_wifi_scan_start(&wifi_scan_config, true); // OBS blocking mode!
+    ESP_ERROR_CHECK(esp_wifi_scan_start(&wifi_scan_config, true)); // OBS blocking mode!
     
     wifi_ap_record_t wifi_records[MAX_APs];
 
@@ -79,7 +81,8 @@ void wifiScan()
     {
         printf("%32s | %7d | %4d | %12s\n", (char *)wifi_records[i].ssid,wifi_records[i].primary,wifi_records[i].rssi,getAuthModeName(wifi_records[i].authmode));
     }
-    printf("-----------------------------------------------------------------\n");
+    printf("-----------------------------------------------------------------\n"); 
+
 }  
 
 
@@ -100,6 +103,5 @@ void wifiInit()
         }
     };
     ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config));
-
     ESP_ERROR_CHECK(esp_wifi_start());
 }
