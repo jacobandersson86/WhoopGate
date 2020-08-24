@@ -5,18 +5,22 @@
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "mqtt.h"
+#include "led.h"
 
 #define TAG "main"
 
+extern "C" void app_main(void);
+
 TaskHandle_t eventLogicTaskHandle;
 
-const uint32_t WIFI_CONNECTED = BIT1;
-const uint32_t MQTT_CONNECTED = BIT2;
-const uint32_t MQTT_DATA = BIT3;
-const uint32_t LED_COMMAND = BIT4;
+extern const uint32_t WIFI_CONNECTED = BIT1;
+extern const uint32_t MQTT_CONNECTED = BIT2;
+extern const uint32_t MQTT_DATA = BIT3;
+extern const uint32_t LED_COMMAND = BIT4;
 const char * my_id = CONFIG_WHOOP_ID;
 
-void LogicTask(void *para)
+
+void mainLogicTask(void *para)
 {
     uint32_t command = 0;
     for(;;)
@@ -44,15 +48,16 @@ void LogicTask(void *para)
 
 }
 
-void initMain()
+void mainInit()
 {
-    xTaskCreate(LogicTask, "LogicTask", 1024*4,NULL, 5, &eventLogicTaskHandle);
+    xTaskCreate(mainLogicTask, "mainLogicTask", 1024*4,NULL, 5, &eventLogicTaskHandle);
 }
 
 void initAll()
 {
-    initMain();
+    mainInit();
     wifiInit();
+    ledInit();
 }
 
 void app_main()
