@@ -8,15 +8,21 @@ menu "Whoop Gate Configuration"
     menu "Wifi connect"
         config WIFI_SSID
             string "SSID"
-            default "my ssid"
+            default "ssid"
         config WIFI_PASSWORD
             string "PASSWORD"
-            default "my password"
+            default "password"
     endmenu
 
     menu "MQTT client"
         config MQTT_URI
             string "URI"
-            default "my uri"
+            default "uri"
+    endmenu
+
+    menu "OTA"
+        config OTA_URL
+            string "URL"
+            default "url"
     endmenu
 endmenu

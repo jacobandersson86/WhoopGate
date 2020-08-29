@@ -10,7 +10,9 @@
 
 
 #define TAG "ota"
+#define URL CONFIG_OTA_URL // our ota location
 xSemaphoreHandle ota_semaphore;
+
 extern const uint8_t server_cert_pem_start[] asm("_binary_GlobalSign_pem_start");
 
 static esp_err_t client_event_handler(esp_http_client_event_t *evt)
@@ -43,7 +45,7 @@ static void ota_run(void *params)
     ESP_LOGI(TAG, "Invoking OTA");
 
     esp_http_client_config_t clientConfig = {
-        .url = "https://drive.google.com/uc?authuser=0&id=11XYVdkM3UITT6DvoiekVCdWaMuPSFtMz&export=download", // our ota location
+        .url = URL, 
         .event_handler = client_event_handler,
         .cert_pem = (char *)server_cert_pem_start};
 
