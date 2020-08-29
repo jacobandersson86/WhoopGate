@@ -6,6 +6,7 @@
 #include "esp_log.h"
 #include "mqtt.h"
 #include "led.h"
+#include "ota.h"
 
 #define TAG "main"
 
@@ -31,6 +32,7 @@ void mainLogicTask(void *para)
             case WIFI_CONNECTED:
                 ESP_LOGI(TAG, "Wifi connected");
                 mqtt_start_client();
+                wifiScan();
                 break;
             case MQTT_CONNECTED:
                 mqtt_subscribe_topics();
@@ -58,12 +60,14 @@ void initAll()
     mainInit();
     wifiInit();
     ledInit();
+    ota_init();
 }
 
 void app_main()
 {
     initAll();
-    printf("WhoopGate!\n");
-    //wifiScan();
+    ota_print_current_firmware_version();
+    vTaskDelay(5000/portTICK_PERIOD_MS);
+    ota_begin_firmare_update();
     
 }

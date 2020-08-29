@@ -27,10 +27,6 @@ static void _fastfade_cb(void *param){
 
   ff->color.hue++;
 
-  if (ff->color.hue % 10 == 0) {
-    printf("fast hsv fade h: %d s: %d v: %d\n",ff->color.hue,ff->color.s, ff->color.v);
-  }
-
   fill_solid(leds,NUM_LEDS,ff->color);
 
   FastLED.show();
