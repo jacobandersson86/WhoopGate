@@ -7,6 +7,7 @@
 #include "mqtt.h"
 #include "led.h"
 #include "ota.h"
+#include "nutsbolts.h"
 
 #define TAG "main"
 
@@ -66,8 +67,10 @@ void initAll()
 void app_main()
 {
     initAll();
-    ota_print_current_firmware_version();
+    uint8_t id[2];
+    nutsbolts_get_id(id);
     vTaskDelay(5000/portTICK_PERIOD_MS);
-    ota_begin_firmare_update();
+
+
     
 }

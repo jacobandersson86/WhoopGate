@@ -7,6 +7,8 @@
 #include "freertos/queue.h"
 #include "esp_log.h"
 #include "esp_err.h"
+#include "esp_system.h"
+#include "nutsbolts.h"
 
 #define URI CONFIG_MQTT_URI
 #define TAG "mqtt"
@@ -77,8 +79,18 @@ void mqtt_start_client(void)
 
 void mqtt_subscribe_topics(void)
 {
-    char str[256];
-    sprintf(str,"/whoopgate/%s", my_id);
-    esp_mqtt_client_subscribe(client, str, 2);
+    char topic[256];
+    uint8_t id[2];
+    nutsbolts_get_id(id);
+    sprintf(topic, "/whoopgate/%02x%02x",id[0],id[1]);
+    esp_mqtt_client_subscribe(client, topic, 2);
     esp_mqtt_client_subscribe(client, "/whoopgate/all", 2);
+}
+
+void mqtt_publish_id(void)
+{
+  char topic[256];
+  uint8_t id[2];
+  nutsbolts_get_id(id);
+  sprintf(topic, "/whoopgate/%02x%02x/identity",id[0],id[1]);
 }
