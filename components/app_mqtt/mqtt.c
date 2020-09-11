@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "mqtt_client.h"
 #include "freertos/FreeRTOS.h"
@@ -23,11 +24,38 @@ extern const char* my_id;
       .uri = URI};
   esp_mqtt_client_handle_t client = NULL;
 
+char *buffer = NULL; //Used for buffering incomming msq data
+
 // [PFDE]
+void mqtt_recieve_buffer_data(esp_mqtt_event_t *event);
 void mqtt_event_handler_cb(esp_mqtt_event_handle_t event);
 static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data);
 
+
 // [PFUN]
+void mqtt_on_got_data(char * data, int length)
+{
+  ESP_LOGI(TAG,"Got data. LENGTH: %i", length);
+  ESP_LOGI(TAG,"DATA: %.*s", length, data);
+  free(data); //Handling for now. Supposed to be put on a que for the parser. 
+}
+
+
+void mqtt_recieve_buffer_data(esp_mqtt_event_t *event)
+{
+  ESP_LOGI(TAG, "DATA LENGTH: %i, TOTAL LENGTH %i, OFFSET %i", event->data_len, event->total_data_len, event->current_data_offset);
+  if(buffer == NULL)
+  {
+    buffer = (char*) malloc(event->total_data_len);
+  }
+  memcpy(&buffer[event->current_data_offset], event->data, event->data_len);
+  if(event->total_data_len == event->current_data_offset + event->data_len)
+  {
+    mqtt_on_got_data(buffer, event->total_data_len);
+    buffer = NULL; // Freeing this allocated memory must be done by recieving part!
+  }  
+}
+
 void mqtt_event_handler_cb(esp_mqtt_event_handle_t event)
 {
   switch (event->event_id)
@@ -50,8 +78,7 @@ void mqtt_event_handler_cb(esp_mqtt_event_handle_t event)
     break;
   case MQTT_EVENT_DATA:
     ESP_LOGI(TAG, "MQTT_EVENT_DATA");
-    printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
-    printf("DATA=%.*s\r\n", event->data_len, event->data);
+    mqtt_recieve_buffer_data(event);
     xTaskNotify(eventLogicTaskHandle, MQTT_DATA, eSetValueWithOverwrite);
     break;
   case MQTT_EVENT_ERROR:
