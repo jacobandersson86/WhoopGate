@@ -8,6 +8,7 @@
 #include "led.h"
 #include "ota.h"
 #include "nutsbolts.h"
+#include "json_create.h"
 
 #define TAG "main"
 
@@ -70,7 +71,9 @@ void app_main()
     uint8_t id[2];
     nutsbolts_get_id(id);
     vTaskDelay(5000/portTICK_PERIOD_MS);
-
-
+    cJSON *colorObject = json_create_color(180,120,20);
+    char * str = json_create_string(colorObject);
+    printf("%s",str);
+    free(str);
     
 }
