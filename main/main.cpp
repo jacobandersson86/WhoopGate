@@ -9,6 +9,7 @@
 #include "ota.h"
 #include "nutsbolts.h"
 #include "json_create.h"
+#include "json_parse.h"
 
 #define TAG "main"
 
@@ -73,7 +74,16 @@ void app_main()
     vTaskDelay(5000/portTICK_PERIOD_MS);
     cJSON *colorObject = json_create_color(180,120,20);
     char * str = json_create_string(colorObject);
-    printf("%s",str);
+    printf("%s\n",str);
+    uint8_t hue, saturation, value;
+    if(!json_parse_color(str, &hue, &saturation, &value))
+    {
+        ESP_LOGE(TAG,"Failed to parse json string");
+    }
+    else
+    {
+        printf("H:%i S:%i, V:%i\n", hue, saturation, value);
+    }
     free(str);
     
 }
