@@ -75,14 +75,13 @@ void app_main()
     cJSON *colorObject = json_create_color(180,120,20);
     char * str = json_create_string(colorObject);
     printf("%s\n",str);
-    uint8_t hue, saturation, value;
-    if(!json_parse_color(str, &hue, &saturation, &value))
+    if(!json_parse(str))
     {
         ESP_LOGE(TAG,"Failed to parse json string");
     }
     else
     {
-        printf("H:%i S:%i, V:%i\n", hue, saturation, value);
+        ESP_LOGI(TAG, "Succesfully parsed objects from string");
     }
     free(str);
     

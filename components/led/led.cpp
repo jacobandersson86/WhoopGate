@@ -68,3 +68,8 @@ void ledInit()
     xTaskCreatePinnedToCore(&fastfade, "blinkLeds", 4000, NULL, 5, NULL, 0);
 }
 
+extern "C" void ledSetColorHSV(uint8_t hue, uint8_t saturation, uint8_t value)
+{
+  //TODO Implement something to set all elements to the incomming color
+  printf("H:%i S:%i, V:%i\n", hue, saturation, value);
+}

@@ -5,7 +5,14 @@ extern "C" {
 #ifndef JASON_PARSE_H
 #define JASON_PARSE_H
 
-int json_parse_color(const char* const string, uint8_t *hue, uint8_t *saturation, uint8_t *value);
+/**
+ * @brief Takes a string as an argument. Returns 0 if the parsing was unsucessfull and 1 or more
+ * if a recognized object was found.
+ * 
+ * @param string 
+ * @return int 
+ */
+int json_parse(const char* const string);
 
 #endif //JASON_PARSE_H
 
