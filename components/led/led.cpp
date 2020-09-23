@@ -5,6 +5,7 @@
 #include "esp_system.h"
 #include "esp_spi_flash.h"
 #include "FastLED.h"
+#include "esp_log.h"
 
 #define NUM_LEDS 25
 #define DATA_PIN 27 
@@ -18,6 +19,7 @@ CRGB leds[NUM_LEDS];
 typedef struct {
   CHSV color;
 } fastfade_t;
+static const char* TAG = "led";
 
 #define FASTFADE_FPS 30
 
@@ -64,12 +66,19 @@ void ledInit()
 {
     FastLED.addLeds<LED_TYPE, DATA_PIN>(leds, NUM_LEDS);
     FastLED.setMaxPowerInVoltsAndMilliamps(INPUT_VOLTAGE,INPUT_AMPARAGE);
+    CHSV color = CHSV(0, 0, 0);
+    fill_solid(leds, NUM_LEDS, color);
+    FastLED.show();
 
-    xTaskCreatePinnedToCore(&fastfade, "blinkLeds", 4000, NULL, 5, NULL, 0);
+    //xTaskCreatePinnedToCore(&fastfade, "blinkLeds", 4000, NULL, 5, NULL, 0);
 }
 
 extern "C" void ledSetColorHSV(uint8_t hue, uint8_t saturation, uint8_t value)
 {
   //TODO Implement something to set all elements to the incomming color
-  printf("H:%i S:%i, V:%i\n", hue, saturation, value);
+  CHSV color = CHSV(hue, saturation, value);
+  fill_solid(leds, NUM_LEDS, color);
+  FastLED.show();
+  ESP_LOGI(TAG, "H:%i S:%i, V:%i\n", hue, saturation, value);
+
 }

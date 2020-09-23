@@ -22,6 +22,7 @@ extern const uint32_t MQTT_CONNECTED = BIT2;
 extern const uint32_t MQTT_DATA = BIT3;
 extern const uint32_t LED_COMMAND = BIT4;
 const char * my_id = CONFIG_WHOOP_ID;
+int mqtt_rdy = 0;
 
 
 void mainLogicTask(void *para)
@@ -39,6 +40,7 @@ void mainLogicTask(void *para)
                 break;
             case MQTT_CONNECTED:
                 mqtt_subscribe_topics();
+                mqtt_rdy = 1;
                 break;
             case MQTT_DATA:
                 // Yay, we have some brand new data, lets do something. 
@@ -72,18 +74,12 @@ void app_main()
     initAll();
     uint8_t id[2];
     nutsbolts_get_id(id);
-    vTaskDelay(5000/portTICK_PERIOD_MS);
-    cJSON *colorObject = json_create_color(180,120,20);
-    char * str = json_create_string(colorObject);
-    printf("%s\n",str);
-    if(!json_parse(str))
+    while(1)
     {
-        ESP_LOGE(TAG,"Failed to parse json string");
+        if(mqtt_rdy)
+            mqtt_publish_id();
+        vTaskDelay(1000/portTICK_PERIOD_MS);
     }
-    else
-    {
-        ESP_LOGI(TAG, "Succesfully parsed objects from string");
-    }
-    free(str);
+
     
 }

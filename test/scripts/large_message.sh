@@ -1,5 +1,5 @@
 #!/bin/bash
-topic=/whoopgate/all
+topic=whoopgate/all
 msg1='{
     "color": 
     {

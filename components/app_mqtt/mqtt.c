@@ -114,9 +114,9 @@ void mqtt_subscribe_topics(void)
     char topic[256];
     uint8_t id[2];
     nutsbolts_get_id(id);
-    sprintf(topic, "/whoopgate/%02x%02x",id[0],id[1]);
+    sprintf(topic, "whoopgate/gate%02x%02x",id[0],id[1]);
     esp_mqtt_client_subscribe(client, topic, 2);
-    esp_mqtt_client_subscribe(client, "/whoopgate/all", 2);
+    esp_mqtt_client_subscribe(client, "whoopgate/all", 2);
 }
 
 void mqtt_publish_id(void)
@@ -124,5 +124,8 @@ void mqtt_publish_id(void)
   char topic[256];
   uint8_t id[2];
   nutsbolts_get_id(id);
-  sprintf(topic, "/whoopgate/%02x%02x/identity",id[0],id[1]);
+  char id_str[32];
+  sprintf(id_str, "gate%02x%02x",id[0],id[1]);
+  sprintf(topic, "whoopgate/%s/identity",id_str);
+  esp_mqtt_client_publish(client, topic, id_str, strlen(id_str) , 0, 0);
 }
