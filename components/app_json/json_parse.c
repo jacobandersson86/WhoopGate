@@ -4,9 +4,15 @@
 #include "esp_err.h"
 #include "esp_types.h"
 #include "json_parse.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/queue.h"
 #include "led.h"
 
+
+
 static const char* TAG = "json_parse";
+QueueHandle_t parsingQueue = NULL; 
 
 
 
@@ -62,10 +68,35 @@ int json_parse(const char* const string)
     else
     {
         status = 0;
+        ESP_LOGW(TAG, "Unable to parse item: \n%s", string);
         goto end;
     }
 
 end:
     cJSON_Delete(object);
     return status;
+}
+
+void json_parse_task(void *ptr)
+{
+    char * string = NULL;
+    while(1)
+    {
+        if(pdTRUE == xQueueReceive(parsingQueue, &string, portMAX_DELAY))
+        {
+            json_parse(string);
+            free(string);
+            string = NULL;
+        }
+        else
+        {
+            ESP_LOGE(TAG, "Failed to retrieve queue item");
+        }
+    }
+}
+
+void json_parse_init()
+{
+    parsingQueue = xQueueCreate( 20, sizeof(char *));
+    xTaskCreate(json_parse_task, "json_parse_task", 1024 * 4, NULL, 10, NULL);
 }

@@ -20,6 +20,8 @@ extern const uint32_t MQTT_DATA;
 extern const uint32_t LED_COMMAND;
 extern const char* my_id;
 
+extern QueueHandle_t parsingQueue;
+
   esp_mqtt_client_config_t mqttConfig = {
       .uri = URI};
   esp_mqtt_client_handle_t client = NULL;
@@ -36,8 +38,11 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
 void mqtt_on_got_data(char * data, int length)
 {
   ESP_LOGI(TAG,"Got data. LENGTH: %i", length);
-  ESP_LOGI(TAG,"DATA: %.*s", length, data);
-  free(data); //Handling for now. Supposed to be put on a que for the parser. 
+  if( !(pdTRUE == xQueueSend(parsingQueue, &data, 5000/portTICK_PERIOD_MS)))
+  {
+    free(data); // Free data on failure. Recieiving function must free on success.
+    ESP_LOGE(TAG, "Unable to queue item");
+  }
 }
 
 

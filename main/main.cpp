@@ -61,8 +61,9 @@ void mainInit()
 void initAll()
 {
     mainInit();
-    wifiInit();
     ledInit();
+    json_parse_init();
+    wifiInit();
     ota_init();
 }
 

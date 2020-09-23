@@ -14,6 +14,8 @@ extern "C" {
  */
 int json_parse(const char* const string);
 
+void json_parse_init();
+
 #endif //JASON_PARSE_H
 
 #ifdef __cplusplus
