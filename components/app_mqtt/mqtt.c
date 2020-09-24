@@ -12,6 +12,8 @@
 #include "nutsbolts.h"
 
 #define URI CONFIG_MQTT_URI
+#define USER CONFIG_MQTT_USER
+#define PASSWORD CONFIG_MQTT_PASSWORD
 #define TAG "mqtt"
 
 extern TaskHandle_t eventLogicTaskHandle;
@@ -23,7 +25,9 @@ extern const char* my_id;
 extern QueueHandle_t parsingQueue;
 
   esp_mqtt_client_config_t mqttConfig = {
-      .uri = URI};
+      .uri = URI,
+      .username = USER,
+      .password = PASSWORD};
   esp_mqtt_client_handle_t client = NULL;
 
 char *buffer = NULL; //Used for buffering incomming msq data
@@ -128,4 +132,10 @@ void mqtt_publish_id(void)
   sprintf(id_str, "gate%02x%02x",id[0],id[1]);
   sprintf(topic, "whoopgate/%s/identity",id_str);
   esp_mqtt_client_publish(client, topic, id_str, strlen(id_str) , 0, 0);
+}
+
+void mqtt_stop_client(void)
+{
+  ESP_ERROR_CHECK(esp_mqtt_client_stop(client));
+  ESP_ERROR_CHECK(esp_mqtt_client_destroy(client));
 }

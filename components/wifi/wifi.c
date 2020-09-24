@@ -19,6 +19,7 @@
 // [EXTN]
 extern TaskHandle_t eventLogicTaskHandle;
 extern const uint32_t WIFI_CONNECTED;
+extern const uint32_t WIFI_DISCONNECTED;
 
 // [PFDE]
 static esp_err_t event_handler(void * ctx, system_event_t *ev);
@@ -42,6 +43,8 @@ static esp_err_t event_handler(void * ctx, system_event_t *event)
             break;
         case SYSTEM_EVENT_STA_DISCONNECTED:
             ESP_LOGI(TAG, "Disconnected");
+            esp_wifi_connect();
+            xTaskNotify(eventLogicTaskHandle, WIFI_DISCONNECTED, eSetValueWithOverwrite);
             break;
         default:
             break;

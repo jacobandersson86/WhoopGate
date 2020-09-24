@@ -18,6 +18,12 @@ menu "Whoop Gate Configuration"
         config MQTT_URI
             string "URI"
             default "uri"
+        config MQTT_USER
+            string "USERNAME"
+            default "my_user"
+        config MQTT_PASSWORD
+            string "PASSWORD"
+            default "my_password"
     endmenu
 
     menu "OTA"
