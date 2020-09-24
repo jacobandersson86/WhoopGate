@@ -1,5 +1,11 @@
 #!/bin/bash
-topic=whoopgate/all
+topic_gate1=whoopgate/gatebfc0
+topic_gate2=whoopgate/gatebf04
+topic_gate3=whoopgate/gatee824
+topic_gate4=whoopgate/gateae20
+topic_all=whoopgate/all
+
+
 working_dir='../../build/config'
 config_json_path="$working_dir/sdkconfig.json"
 
@@ -57,23 +63,26 @@ user=$(jq -r ".MQTT_USER" "$config_json_path")
 printf "$user\n"
 
 
-mosquitto_pub -t $topic -m "$msq2" -h "$host" -p "$port" -u "$user" -P "$pass"
+mosquitto_pub -t $topic_all -m "$msq2" -h "$host" -p "$port" -u "$user" -P "$pass"
 
 for i in {1..10}
 do
 
-mosquitto_pub -t $topic -m "$msg1" -h "$host" -p "$port" -u "$user" -P "$pass"
+mosquitto_pub -t $topic_gate1 -m "$msg1" -h "$host" -p "$port" -u "$user" -P "$pass"
 sleep 1
 
-mosquitto_pub -t $topic -m "$msg2" -h "$host" -p "$port" -u "$user" -P "$pass"
+mosquitto_pub -t $topic_gate2 -m "$msg3" -h "$host" -p "$port" -u "$user" -P "$pass"
 sleep 1
 
-mosquitto_pub -t $topic -m "$msg3" -h "$host" -p "$port" -u "$user" -P "$pass"
+mosquitto_pub -t $topic_gate3 -m "$msg4" -h "$host" -p "$port" -u "$user" -P "$pass"
 sleep 1
 
-mosquitto_pub -t $topic -m "$msg4" -h "$host" -p "$port" -u "$user" -P "$pass"
+mosquitto_pub -t $topic_gate4 -m "$msg1" -h "$host" -p "$port" -u "$user" -P "$pass"
+sleep 1
+
+mosquitto_pub -t $topic_all -m "$msg5" -h "$host" -p "$port" -u "$user" -P "$pass"
 sleep 1
 
 done
 
-mosquitto_pub -t $topic -m "$msg5" -h "$host" -p "$port" -u "$user" -P "$pass"
+mosquitto_pub -t $topic_all -m "$msg5" -h "$host" -p "$port" -u "$user" -P "$pass"

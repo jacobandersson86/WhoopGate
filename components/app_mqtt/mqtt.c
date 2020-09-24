@@ -10,6 +10,7 @@
 #include "esp_err.h"
 #include "esp_system.h"
 #include "nutsbolts.h"
+#include "json_create.h"
 
 #define URI CONFIG_MQTT_URI
 #define USER CONFIG_MQTT_USER
@@ -131,7 +132,8 @@ void mqtt_publish_id(void)
   char id_str[32];
   sprintf(id_str, "gate%02x%02x",id[0],id[1]);
   sprintf(topic, "whoopgate/%s/identity",id_str);
-  esp_mqtt_client_publish(client, topic, id_str, strlen(id_str) , 0, 0);
+  char *msg = json_create_string(json_create_identity());
+  esp_mqtt_client_publish(client, topic, msg, strlen(msg), 0, 0);
 }
 
 void mqtt_stop_client(void)

@@ -35,6 +35,8 @@ char *json_create_string(cJSON * object);
  */
 cJSON *json_create_color(uint8_t hue, uint8_t saturation, uint8_t value);
 
+cJSON *json_create_identity();
+
 #endif //JSON_CREATE_H
 
 #ifdef __cplusplus

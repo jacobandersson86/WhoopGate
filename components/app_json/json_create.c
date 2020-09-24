@@ -4,6 +4,7 @@
 #include "esp_err.h"
 #include "esp_types.h"
 #include "json_create.h"
+#include "nutsbolts.h"
 
 static const char* TAG = "json_create";
 
@@ -24,6 +25,7 @@ char *json_create_string(cJSON * object)
     json_create_delete(object);
     return string;
 }
+
 
 cJSON *json_create_color(uint8_t hue, uint8_t saturation, uint8_t value)
 {
@@ -53,6 +55,41 @@ cJSON *json_create_color(uint8_t hue, uint8_t saturation, uint8_t value)
     cJSON_AddItemToObject(colorObject, "value", valueItem);
 
     return object;
+
+end:
+    cJSON_Delete(object);
+    return NULL;
+}
+
+cJSON *json_create_identity()
+{
+    cJSON *object = NULL;
+    cJSON *gateObject = NULL;
+    cJSON *idItem = NULL;
+    cJSON *colorObjectParent = NULL;
+    cJSON *colorObject = NULL;
+
+    object = cJSON_CreateObject();
+    JSON_GOTO_END_CHECK(object);
+
+    gateObject = cJSON_CreateObject();
+    JSON_GOTO_END_CHECK(gateObject);
+    cJSON_AddItemToObject(object, "gate", gateObject);
+
+    uint8_t id[2];
+    nutsbolts_get_id(id);
+    char id_str[32];
+    sprintf(id_str, "gate%02x%02x",id[0],id[1]);
+    idItem = cJSON_CreateString(id_str);
+    JSON_GOTO_END_CHECK(idItem);
+    cJSON_AddItemToObject(gateObject, "id", idItem);
+
+    colorObjectParent = json_create_color(180, 120, 20); // TODO:Might have memory leak!
+    colorObject = cJSON_GetObjectItemCaseSensitive(colorObjectParent, "color");
+    JSON_GOTO_END_CHECK(colorObject);
+    cJSON_AddItemToObject(gateObject, "color", colorObject);
+
+    return object; 
 
 end:
     cJSON_Delete(object);
