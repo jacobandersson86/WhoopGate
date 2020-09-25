@@ -22,7 +22,6 @@ extern const uint32_t MQTT_CONNECTED = BIT2;
 extern const uint32_t MQTT_DATA = BIT3;
 extern const uint32_t LED_COMMAND = BIT4;
 extern const uint32_t WIFI_DISCONNECTED = BIT5;
-const char * my_id = CONFIG_WHOOP_ID;
 int mqtt_rdy = 0;
 
 

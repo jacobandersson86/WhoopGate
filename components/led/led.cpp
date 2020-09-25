@@ -7,8 +7,8 @@
 #include "FastLED.h"
 #include "esp_log.h"
 
-#define NUM_LEDS 25
-#define DATA_PIN 27 
+#define NUM_LEDS CONFIG_WHOOP_N_LED
+#define DATA_PIN CONFIG_WHOOP_PIN
 #define BRIGHTNESS  20
 #define LED_TYPE    WS2811
 #define COLOR_ORDER RGB

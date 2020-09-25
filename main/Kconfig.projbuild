@@ -1,8 +1,11 @@
 menu "Whoop Gate Configuration"
     menu "General"
-        config WHOOP_ID
-            string "ID"
-            default "gate1"
+        config WHOOP_PIN
+            int "PIN"
+            default 26
+        config WHOOP_N_LED
+            int "NUMBER OF LEDS"
+            default 150
     endmenu
 
     menu "Wifi connect"
