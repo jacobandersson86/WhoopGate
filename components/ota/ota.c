@@ -11,7 +11,20 @@
 
 #define TAG "ota"
 #define URL CONFIG_OTA_URL // our ota location
+
+typedef struct ota
+{
+  char * url;
+
+}ota_handle_t;
+
 xSemaphoreHandle ota_semaphore;
+static ota_handle_t handle =
+{
+  .url = URL
+};
+
+
 
 extern const uint8_t server_cert_pem_start[] asm("_binary_GlobalSign_pem_start");
 
@@ -100,11 +113,13 @@ static void ota_run(void *params)
 void ota_init()
 {
     ota_semaphore = xSemaphoreCreateBinary();
-    xTaskCreate(ota_run, "ota", 1024 * 8, NULL, 2, NULL);
+    xTaskCreate(ota_run, "ota", 1024 * 8, &handle, 2, NULL);
 }
 
-void ota_begin_firmare_update()
+void ota_begin_firmare_update(const char *url)
 {
+    handle.url = (char *) malloc(sizeof(char) * (strlen(url)+1));
+    strcpy(handle.url, url);
     xSemaphoreGive(ota_semaphore);
 }
 
@@ -114,4 +129,12 @@ void ota_print_current_firmware_version()
     esp_app_desc_t running_partition_description;
     esp_ota_get_partition_description(running_partition, &running_partition_description);
     ESP_LOGI(TAG,"current firmware version is: %s", running_partition_description.version);
+}
+
+void ota_get_fw_version(char * version)
+{
+    const esp_partition_t *running_partition = esp_ota_get_running_partition();
+    esp_app_desc_t running_partition_description;
+    esp_ota_get_partition_description(running_partition, &running_partition_description);
+    strcpy(version, running_partition_description.version);
 }
