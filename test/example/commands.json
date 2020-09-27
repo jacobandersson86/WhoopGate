@@ -1,0 +1,43 @@
+{
+    "commands":
+    [
+    {
+        "name" : "firmwareupdate",
+        "url" : "https://url.to.binary/file"
+    },
+    {
+        "name" : "setColorAll",
+        "color":
+        {
+            "hue":	180,
+            "saturation":	120,
+            "value":	20
+        }
+    },
+    {
+        "name" : "configLED",
+        "pinNumber" : 25,
+        "pixelNumber" : 150,
+        "ledType" : "WS2811",
+        "colorType" : "RGB" //Could also be RGBW
+    },
+    {
+        "name" : "animation1",
+        "color" : //array of colors to animation1
+        [
+        {
+            "hue": 10,
+            "saturation" : 132,
+            "value" : 123
+        },
+        {
+            "hue": 190,
+            "saturation" : 132,
+            "value" : 123
+        }
+        ], //Some more arbitrary information from animation1 
+        "time" : 120,
+        "full" : true
+    }
+    ]
+}
